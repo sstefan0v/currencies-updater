@@ -9,33 +9,33 @@ import lombok.ToString;
 public class Row {
 
     @XmlElement(name = "GOLD")
-    public String gold;
+    private String gold;
 
     @XmlElement(name = "NAME_")
-    public String name;
+    private String name;
 
     @XmlElement(name = "CODE")
-    public String code;
+    private String code;
 
     @XmlElement(name = "RATIO")
-    public String ratio;
+    private String ratio;
 
     @XmlElement(name = "REVERSERATE")
-    public String reverseRate;
+    private String reverseRate;
 
     @XmlElement(name = "RATE")
-    public String rate;
+    private String rate;
 
     @XmlElement(name = "EXTRAINFO")
-    public String extraInfo;
+    private String extraInfo;
 
     @XmlElement(name = "CURR_DATE")
-    public String currDate;
+    private String currDate;
 
     @XmlElement(name = "TITLE")
-    public String title;
+    private String title;
 
     @XmlElement(name = "F_STAR")
-    public String fStar;
+    private String fStar;
 }
 

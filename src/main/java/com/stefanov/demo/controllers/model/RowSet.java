@@ -10,5 +10,5 @@ import java.util.List;
 public class RowSet {
 
     @XmlElement(name = "ROW")
-    public List<Row> rows;
+    private List<Row> rows;
 }
