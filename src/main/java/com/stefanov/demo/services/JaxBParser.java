@@ -19,7 +19,6 @@ public class JaxBParser {
         return (RowSet) context.createUnmarshaller()
                 .unmarshal(new StringReader(inputString));
     }
-
 }
 
 
