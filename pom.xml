@@ -13,7 +13,7 @@
     <artifactId>currencies-updater</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>currencies-updater</name>
-    <description>Demo project for Spring Boot 3.3 and Java 23</description>
+    <description>Demo project</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -33,9 +33,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -86,25 +85,17 @@
 			<version>2.1.0</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-maven-plugin</artifactId>
 			<version>10.19.0</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.34</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -120,7 +111,15 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
