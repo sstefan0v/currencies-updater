@@ -7,12 +7,12 @@ import reactor.core.publisher.Mono;
 
 @Service
 @Slf4j
-public class BnbRestAPIService {
+public class BNBRestAPIService {
 
-    private final WebClient webClient;
     private final Props props;
+    private final WebClient webClient;
 
-    public BnbRestAPIService(Props props, WebClient.Builder webBuilder) {
+    public BNBRestAPIService(Props props, WebClient.Builder webBuilder) {
         this.props = props;
         this.webClient = webBuilder.baseUrl(props.getBnbBaseUrl()).build();
     }
@@ -22,6 +22,6 @@ public class BnbRestAPIService {
                 .uri(props.getBnbCurrenciesUrl())
                 .retrieve()
                 .bodyToMono(String.class);
-        return mono.block();
+        return  mono.block();
     }
 }
