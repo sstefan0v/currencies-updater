@@ -7,7 +7,7 @@ import java.util.List;
 
 @XmlRootElement(name = "ROWSET")
 @Getter
-public class RowSet {
+public class RowsList {
 
     @XmlElement(name = "ROW")
     private List<Row> rows;

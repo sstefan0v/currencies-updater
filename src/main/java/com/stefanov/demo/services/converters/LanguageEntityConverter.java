@@ -2,17 +2,18 @@ package com.stefanov.demo.services.converters;
 
 import com.stefanov.demo.controllers.model.Row;
 import com.stefanov.demo.entities.Language;
+import com.stefanov.demo.services.LanguageCode;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LanguageEntityConverter  {
 
 
-    public Language toEntity(String langCode, Row row) {
+    public Language toEntity(LanguageCode langCode, Row row) {
 
         Language language = new Language();
         language.setGold(parseInt(row.getGold()));
-        language.setLangCode(langCode);
+        language.setLangCode(langCode.getLang());
         language.setName(row.getName());
         language.setCode(row.getCode());
         language.setRatio(row.getRatio());

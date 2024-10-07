@@ -1,7 +1,6 @@
 package com.stefanov.demo.services;
 
-
-import com.stefanov.demo.controllers.model.RowSet;
+import com.stefanov.demo.controllers.model.RowsList;
 import com.stefanov.demo.entities.Currency;
 import com.stefanov.demo.entities.Language;
 import com.stefanov.demo.repositories.LanguageRepository;
@@ -13,15 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import static com.stefanov.demo.services.LanguageCode.BULGARIAN;
+import static com.stefanov.demo.services.LanguageCode.ENGLISH;
 
 @Service
 @Slf4j
 public class BnbCurrenciesGetterService {
 
     @Autowired
-    private BNBRestAPIService bnbRestAPIService;
+    private BNBRestAPIService bnbRestAPI;
 
     @Autowired
     private JaxBParser jaxBParser;
@@ -37,25 +39,45 @@ public class BnbCurrenciesGetterService {
 
 
     public String work() throws JAXBException {
-        String raw = bnbRestAPIService.fetchXmlData();
+        RowsList currenciesListBg = jaxBParser.unmarshal(bnbRestAPI.fetchXmlData(BULGARIAN).substring(1));
+        List<Currency> currencies = currenciesEntityConverter.toEntity(currenciesListBg);
 
-        RowSet rowSet = jaxBParser.unmarshal(raw.substring(1));
+        LocalDate bnbDate = currencies.get(0).getCurrDate();
 
-        Language language = languageEntityConverter.toEntity("BG", rowSet.getRows().get(0));
+        Language bulgarian = languageEntityConverter.toEntity(BULGARIAN, currenciesListBg.getRows().get(0));
 
-        List<Currency> currencies = currenciesEntityConverter.toEntity(rowSet);
+        RowsList currenciesListEng = jaxBParser.unmarshal(bnbRestAPI.fetchXmlData(ENGLISH).substring(1));
+        Language english = languageEntityConverter.toEntity(ENGLISH, currenciesListEng.getRows().get(0));
 
-        persistToDb(List.of(language), currencies);
 
-        return raw;
+        if (bnbDate.isAfter(getMostRecentCurrencyDateFromDB())) {
+            log.debug("bnbDate is After localRecordsDate.");
+            persistToDb(List.of(bulgarian, english), currencies);
+
+        } else {
+            log.debug("bnbDate is not After localRecordsDate.");
+        }
+
+        return "raw";
     }
 
-
     @Transactional
-    public void persistToDb(List<Language> languages, List<Currency> currencies) {
+    private void persistToDb(List<Language> languages, List<Currency> currencies) {
         languages.forEach(language -> language.setCurrencies(currencies));
         languageRepository.saveAll(languages);
 
-        log.debug("Currencies successfully saved to data base.");
+        log.info("Currencies successfully saved to DB.");
+    }
+
+    private LocalDate getMostRecentCurrencyDateFromDB() {
+        Language language = languageRepository.findFirstByOrderByIdDesc();
+        if (language == null) {
+            return LocalDate.of(1, 1, 1);
+        }
+        Currency currency = language.getCurrencies().get(0);
+        if (currency == null) {
+            return LocalDate.of(1, 1, 1);
+        }
+        return currency.getCurrDate();
     }
 }

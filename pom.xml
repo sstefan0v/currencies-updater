@@ -107,6 +107,7 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -125,6 +126,7 @@
 				<artifactId>flyway-maven-plugin</artifactId>
 				<version>10.19.0</version>
 				<configuration>
+					<url>jdbc:postgresql://localhost:5432/bnb_data_main_db</url>
 					<user>stefan</user>
 					<password>1234</password>
 					<schemas>

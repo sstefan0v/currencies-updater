@@ -3,7 +3,8 @@ package com.stefanov.demo.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+
+import java.net.URI;
 
 @Service
 @Slf4j
@@ -17,11 +18,20 @@ public class BNBRestAPIService {
         this.webClient = webBuilder.baseUrl(props.getBnbBaseUrl()).build();
     }
 
-    public String fetchXmlData() {
-        Mono<String> mono = webClient.get()
-                .uri(props.getBnbCurrenciesUrl())
+    public String fetchXmlData(LanguageCode languageCode) {
+        return webClient.get()
+                .uri(uriBuilder -> {
+                    URI uri = uriBuilder
+                            .path(props.getBnbCurrenciesUrl())
+                            .queryParam("download", "xml")
+                            .queryParam("search", "")
+                            .queryParam("lang", languageCode.getLang())
+                            .build();
+                    return uri;
+                })
                 .retrieve()
-                .bodyToMono(String.class);
-        return  mono.block();
+                .bodyToMono(String.class)
+                .block();
+
     }
 }

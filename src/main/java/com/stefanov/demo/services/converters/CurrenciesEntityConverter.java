@@ -2,7 +2,7 @@ package com.stefanov.demo.services.converters;
 
 import com.stefanov.demo.entities.Currency;
 import org.springframework.stereotype.Service;
-import com.stefanov.demo.controllers.model.RowSet;
+import com.stefanov.demo.controllers.model.RowsList;
 import com.stefanov.demo.controllers.model.Row;
 
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class CurrenciesEntityConverter  {
 
     private DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public List<Currency> toEntity(RowSet rowSet) {
+    public List<Currency> toEntity(RowsList rowSet) {
        return rowSet.getRows().stream()
                 .filter(row -> row.getTitle() == null )
                 .map(this::toEntity)

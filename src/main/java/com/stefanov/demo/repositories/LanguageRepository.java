@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LanguageRepository extends JpaRepository<Language, Long> {
 
+    // get the record with the highest 'id'
+    public Language findFirstByOrderByIdDesc();
 }
