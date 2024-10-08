@@ -37,9 +37,13 @@ public class BnbCurrenciesGetterService {
     @Autowired
     private LanguageEntityConverter languageEntityConverter;
 
+    @Autowired
+    private WebSocketService wsService;
 
     public String work() throws JAXBException {
+
         RowsList currenciesListBg = jaxBParser.unmarshal(bnbRestAPI.fetchXmlData(BULGARIAN).substring(1));
+
         List<Currency> currencies = currenciesEntityConverter.toEntity(currenciesListBg);
 
         LocalDate bnbDate = currencies.get(0).getCurrDate();
@@ -49,14 +53,16 @@ public class BnbCurrenciesGetterService {
         RowsList currenciesListEng = jaxBParser.unmarshal(bnbRestAPI.fetchXmlData(ENGLISH).substring(1));
         Language english = languageEntityConverter.toEntity(ENGLISH, currenciesListEng.getRows().get(0));
 
-
         if (bnbDate.isAfter(getMostRecentCurrencyDateFromDB())) {
             log.debug("bnbDate is After localRecordsDate.");
             persistToDb(List.of(bulgarian, english), currencies);
-
         } else {
             log.debug("bnbDate is not After localRecordsDate.");
         }
+
+        String s = jaxBParser.marshal(currenciesListEng);
+
+        wsService.send(s);
 
         return "raw";
     }
