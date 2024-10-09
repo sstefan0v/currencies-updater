@@ -1,13 +1,9 @@
 package com.stefanov.demo.services;
 
-import com.stefanov.demo.controllers.model.RowsList;
 import com.stefanov.demo.entities.Currency;
 import com.stefanov.demo.entities.Language;
-import com.stefanov.demo.repositories.LanguageRepository;
-import com.stefanov.demo.services.converters.CurrenciesEntityConverter;
-import com.stefanov.demo.services.converters.LanguageEntityConverter;
-import jakarta.transaction.Transactional;
-import jakarta.xml.bind.JAXBException;
+import com.stefanov.demo.json.Wrapper;
+import com.stefanov.demo.services.converters.JsonMapperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,75 +11,53 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.stefanov.demo.services.LanguageCode.BULGARIAN;
-import static com.stefanov.demo.services.LanguageCode.ENGLISH;
-
 @Service
 @Slf4j
 public class BnbCurrenciesGetterService {
 
     @Autowired
-    private BNBRestAPIService bnbRestAPI;
+    private BnbRestAPIService bnbRestAPI;
 
-    @Autowired
-    private JaxBParser jaxBParser;
-
-    @Autowired
-    private LanguageRepository languageRepository;
-
-    @Autowired
-    private CurrenciesEntityConverter currenciesEntityConverter;
-
-    @Autowired
-    private LanguageEntityConverter languageEntityConverter;
 
     @Autowired
     private WebSocketService wsService;
 
-    public String work() throws JAXBException {
+    @Autowired
+    private JsonMapperService jsonMapperService;
 
-        RowsList currenciesListBg = jaxBParser.unmarshal(bnbRestAPI.fetchXmlData(BULGARIAN).substring(1));
+    @Autowired
+    private DataBaseService dbService;
 
-        List<Currency> currencies = currenciesEntityConverter.toEntity(currenciesListBg);
+    public String updateCurrencies() {
+        LocalDate bnbCurrencyDate = getCurrenciesAndPersistToDB();
 
-        LocalDate bnbDate = currencies.get(0).getCurrDate();
+        List<Currency> currencies = dbService.getLastCurrenciesFromDB(bnbCurrencyDate);
 
-        Language bulgarian = languageEntityConverter.toEntity(BULGARIAN, currenciesListBg.getRows().get(0));
+        List<Language> languages = currencies.getFirst().getLanguages();
 
-        RowsList currenciesListEng = jaxBParser.unmarshal(bnbRestAPI.fetchXmlData(ENGLISH).substring(1));
-        Language english = languageEntityConverter.toEntity(ENGLISH, currenciesListEng.getRows().get(0));
+        String jsonStr = jsonMapperService.toJsonString(new Wrapper(currencies, languages));
 
-        if (bnbDate.isAfter(getMostRecentCurrencyDateFromDB())) {
+        wsService.send(jsonStr);
+
+        return jsonStr;
+    }
+
+    private LocalDate getCurrenciesAndPersistToDB() {
+        Language bulgarian = dbService.createBulgLanguageEntity(bnbRestAPI.getDataInBulgarian());
+
+        List<Currency> currencies = bulgarian.getCurrencies();
+
+        // get the most recent date from BNB:
+        LocalDate bnbCurrencyDate = currencies.get(0).getCurrDate();
+
+        if (bnbCurrencyDate.isAfter(dbService.getMostRecentCurrencyDateFromDB())) {
             log.debug("bnbDate is After localRecordsDate.");
-            persistToDb(List.of(bulgarian, english), currencies);
+            Language english = dbService.createEngLanguageEntity(bnbRestAPI.getDataInEnglish(), currencies);
+            dbService.persistToDb(List.of(bulgarian, english));
         } else {
             log.debug("bnbDate is not After localRecordsDate.");
         }
 
-        String s = jaxBParser.marshal(currenciesListEng);
-
-        wsService.send(s);
-
-        return "raw";
-    }
-
-    @Transactional
-    private void persistToDb(List<Language> languages, List<Currency> currencies) {
-        languages.forEach(language -> language.setCurrencies(currencies));
-        languageRepository.saveAll(languages);
-
-        log.info("Currencies successfully saved to DB.");
-    }
-
-    private LocalDate getMostRecentCurrencyDateFromDB() {
-        Language language = languageRepository.findFirstByOrderByIdDesc();
-        if (language == null) {
-            return LocalDate.of(1, 1, 1);
-        }
-        Currency currency = language.getCurrencies().get(0);
-        if (currency == null) {
-            return LocalDate.of(1, 1, 1);
-        }
-        return currency.getCurrDate();
+        return bnbCurrencyDate;
     }
 }

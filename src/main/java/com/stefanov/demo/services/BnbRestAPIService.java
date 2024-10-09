@@ -1,37 +1,33 @@
 package com.stefanov.demo.services;
 
+import com.stefanov.demo.controllers.model.RowsList;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.net.URI;
+import static com.stefanov.demo.services.LanguageCode.BULGARIAN;
+import static com.stefanov.demo.services.LanguageCode.ENGLISH;
 
 @Service
 @Slf4j
-public class BNBRestAPIService {
+public class BnbRestAPIService extends BnbRestAPIConnector {
 
-    private final Props props;
-    private final WebClient webClient;
+    @Autowired
+    private JaxBParser jaxBParser;
 
-    public BNBRestAPIService(Props props, WebClient.Builder webBuilder) {
-        this.props = props;
-        this.webClient = webBuilder.baseUrl(props.getBnbBaseUrl()).build();
+    public BnbRestAPIService(Props props, WebClient.Builder webBuilder) {
+        super(props, webBuilder);
     }
 
-    public String fetchXmlData(LanguageCode languageCode) {
-        return webClient.get()
-                .uri(uriBuilder -> {
-                    URI uri = uriBuilder
-                            .path(props.getBnbCurrenciesUrl())
-                            .queryParam("download", "xml")
-                            .queryParam("search", "")
-                            .queryParam("lang", languageCode.getLang())
-                            .build();
-                    return uri;
-                })
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
+    public RowsList getDataInBulgarian()  {
+        String xmlString = fetchXmlData(BULGARIAN).substring(1);
+        return jaxBParser.unmarshal(xmlString);
     }
+
+    public RowsList getDataInEnglish()  {
+        String xmlString = fetchXmlData(ENGLISH).substring(1);
+        return jaxBParser.unmarshal(xmlString);
+    }
+
 }

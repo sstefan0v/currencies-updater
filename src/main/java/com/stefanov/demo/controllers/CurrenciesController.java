@@ -13,7 +13,7 @@ public class CurrenciesController {
     private BnbCurrenciesGetterService bnbCurrenciesGetterService;
 
     @GetMapping("/download-currencies")
-    public String getBnbCurrencies() throws JAXBException {
-        return bnbCurrenciesGetterService.work();
+    public String getBnbCurrencies() {
+        return bnbCurrenciesGetterService.updateCurrencies();
     }
 }

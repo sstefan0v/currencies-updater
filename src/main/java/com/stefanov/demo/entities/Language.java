@@ -1,9 +1,12 @@
 package com.stefanov.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
+
+import static org.hibernate.annotations.CascadeType.ALL;
 
 import java.util.List;
 
@@ -38,13 +41,13 @@ public class Language {
     @Column
     private String rate;
 
-    @Column(name = "extra_info",  columnDefinition = "TEXT")
+    @Column(name = "extra_info")
     private String extraInfo;
 
     @Column(name = "curr_date")
     private String currDate;
 
-    @Column( columnDefinition = "TEXT")
+    @Column
     private String title;
 
     @Column(name = "f_star")
@@ -56,7 +59,8 @@ public class Language {
             joinColumns = @JoinColumn(name = "language_id"),
             inverseJoinColumns = @JoinColumn(name = "currency_id")
     )
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.PERSIST})
+    @Cascade({ALL})
+    @JsonIgnore
     private List<Currency> currencies;
 
 }

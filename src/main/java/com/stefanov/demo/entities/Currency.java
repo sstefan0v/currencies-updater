@@ -1,5 +1,6 @@
 package com.stefanov.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,5 +43,6 @@ public class Currency {
 
     @ManyToMany(mappedBy = "currencies")
     @Cascade({CascadeType.ALL})
+    @JsonIgnore
     private List<Language> languages;
 }
