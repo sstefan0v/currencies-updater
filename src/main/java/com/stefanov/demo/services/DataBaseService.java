@@ -7,11 +7,12 @@ import com.stefanov.demo.repositories.CurrencyRepository;
 import com.stefanov.demo.repositories.LanguageRepository;
 import com.stefanov.demo.services.converters.CurrenciesEntityConverter;
 import com.stefanov.demo.services.converters.LanguageEntityConverter;
-import jakarta.transaction.Transactional;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,17 +36,17 @@ public class DataBaseService {
     @Autowired
     private LanguageEntityConverter languageEntityConverter;
 
-
-    List<Currency> getLastCurrenciesFromDB(LocalDate lastDateFromBnb) {
+    List<Language> getRecentRecordsFromDB(LocalDate lastDateFromBnb) {
         Currency currency = new Currency();
         currency.setCurrDate(lastDateFromBnb);
 
-        Example<Currency> example = Example.of(currency);
-        List<Currency> currencies = currencyRepository.findAll(example);
+        Language language = new Language();
+        language.setCurrencies(List.of(currency));
+        List<Language> languages = languageRepository.findAll(Example.of(language));
 
-        log.info("Found {} currencies in DB", currencies.size());
+        log.info("Found {} currency lists (by language) in DB.", languages.size());
 
-        return currencies;
+        return languages;
     }
 
     @Transactional

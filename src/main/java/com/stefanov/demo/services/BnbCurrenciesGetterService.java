@@ -4,6 +4,7 @@ import com.stefanov.demo.entities.Currency;
 import com.stefanov.demo.entities.Language;
 import com.stefanov.demo.json.Wrapper;
 import com.stefanov.demo.services.converters.JsonMapperService;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,9 @@ public class BnbCurrenciesGetterService {
     public String updateCurrencies() {
         LocalDate bnbCurrencyDate = getCurrenciesAndPersistToDB();
 
-        List<Currency> currencies = dbService.getLastCurrenciesFromDB(bnbCurrencyDate);
+        List<Language> languages = dbService.getRecentRecordsFromDB(bnbCurrencyDate);
 
-        List<Language> languages = currencies.getFirst().getLanguages();
-
-        String jsonStr = jsonMapperService.toJsonString(new Wrapper(currencies, languages));
+        String jsonStr = jsonMapperService.toJsonString(languages);
 
         wsService.send(jsonStr);
 

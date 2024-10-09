@@ -34,3 +34,6 @@ CREATE TABLE languages_currencies
     FOREIGN KEY (currency_id) REFERENCES currencies (id) ON DELETE CASCADE,
     FOREIGN KEY (language_id) REFERENCES languages (id) ON DELETE CASCADE
 );
+
+CREATE TABLE currencies_2 AS TABLE currencies;
+CREATE TABLE languages_2 AS TABLE languages;
