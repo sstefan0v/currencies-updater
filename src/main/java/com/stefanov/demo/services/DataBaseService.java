@@ -52,12 +52,14 @@ public class DataBaseService {
 
     LocalDate getMostRecentCurrencyDateFromDB() {
         Language language = languageRepository.findFirstByOrderByIdDesc();
+
+        LocalDate oldestDate = LocalDate.of(1, 1, 1);
         if (language == null) {
-            return LocalDate.of(1, 1, 1);
+            return oldestDate;
         }
         Currency currency = language.getCurrencies().get(0);
         if (currency == null) {
-            return LocalDate.of(1, 1, 1);
+            return oldestDate;
         }
         return currency.getCurrDate();
     }

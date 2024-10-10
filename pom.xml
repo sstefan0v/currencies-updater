@@ -109,7 +109,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -134,13 +133,36 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>10.19.0</version>
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5432/bnb_currencies_db</url>
+                    <url>jdbc:postgresql://localhost:50432/bnb_currencies_db</url>
                     <user>stefan</user>
                     <password>1234</password>
                     <schemas>
                         <schema>public</schema>
                     </schemas>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.dkanejs.maven.plugins</groupId>
+                <artifactId>docker-compose-maven-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <id>up</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>up</goal>
+                        </goals>
+                        <configuration>
+                            <composeFile>${project.basedir}/src/main/resources/docker-compose.yml</composeFile>
+                            <detachedMode>true</detachedMode>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <configuration>
+                            <build>true</build>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
