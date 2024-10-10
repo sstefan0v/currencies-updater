@@ -43,15 +43,17 @@ public class BnbCurrenciesGetterService {
 
         List<Currency> currencies = bulgarian.getCurrencies();
 
-        // get the most recent date from BNB:
+        // most recent date from BNB:
         LocalDate bnbCurrencyDate = currencies.get(0).getCurrDate();
 
+        // get English data only if already not in the DB:
         if (bnbCurrencyDate.isAfter(dbService.getMostRecentCurrencyDateFromDB())) {
-            log.debug("bnbDate is After localRecordsDate.");
+            log.debug("bnbCurrencyDate is After localRecordsDate.");
             Language english = dbService.createEngLanguageEntity(bnbRestAPI.getDataInEnglish(), currencies);
             dbService.persistToDb(List.of(bulgarian, english));
         } else {
-            log.debug("bnbDate is not After localRecordsDate.");
+            log.debug("bnbCurrencyDate is not After localRecordsDate.");
+            log.info("There is record with date {} in DB. Data NOT recorded to DB", bnbCurrencyDate);
         }
 
         return bnbCurrencyDate;
