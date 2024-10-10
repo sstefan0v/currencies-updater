@@ -2,9 +2,7 @@ package com.stefanov.demo.services;
 
 import com.stefanov.demo.entities.Currency;
 import com.stefanov.demo.entities.Language;
-import com.stefanov.demo.json.Wrapper;
 import com.stefanov.demo.services.converters.JsonMapperService;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,6 @@ public class BnbCurrenciesGetterService {
 
     @Autowired
     private BnbRestAPIService bnbRestAPI;
-
 
     @Autowired
     private WebSocketService wsService;

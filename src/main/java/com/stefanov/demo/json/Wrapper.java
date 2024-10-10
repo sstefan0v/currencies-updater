@@ -13,6 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 public class Wrapper {
     private List<Currency> currencies;
-
     private List<Language> languages;
 }

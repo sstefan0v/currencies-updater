@@ -3,11 +3,9 @@ package com.stefanov.demo.services;
 import com.stefanov.demo.controllers.model.RowsList;
 import com.stefanov.demo.entities.Currency;
 import com.stefanov.demo.entities.Language;
-import com.stefanov.demo.repositories.CurrencyRepository;
 import com.stefanov.demo.repositories.LanguageRepository;
 import com.stefanov.demo.services.converters.CurrenciesEntityConverter;
 import com.stefanov.demo.services.converters.LanguageEntityConverter;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -26,9 +24,6 @@ public class DataBaseService {
 
     @Autowired
     private LanguageRepository languageRepository;
-
-    @Autowired
-    private CurrencyRepository currencyRepository;
 
     @Autowired
     private CurrenciesEntityConverter currenciesEntityConverter;

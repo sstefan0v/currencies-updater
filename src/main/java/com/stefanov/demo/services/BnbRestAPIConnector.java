@@ -32,6 +32,5 @@ public class BnbRestAPIConnector {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
     }
 }
