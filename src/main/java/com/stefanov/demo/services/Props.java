@@ -15,4 +15,7 @@ public class Props {
 
     @Value("${bnb.url.currencies}")
     private String bnbCurrenciesUrl;
+
+    @Value("${web-socket.text-message-size-limit}")
+    private int wsTextMessageSizeLimit;
 }
