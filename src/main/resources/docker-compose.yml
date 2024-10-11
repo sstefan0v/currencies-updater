@@ -1,0 +1,16 @@
+services:
+  database:
+    image: 'postgres:17'
+    container_name: stefan_postgres_db
+    ports:
+    - '50432:5432'
+    environment:
+    - 'POSTGRES_USER=stefan'
+    - 'POSTGRES_DB=bnb_currencies_db'
+    - 'POSTGRES_PASSWORD=1234'
+    volumes:
+      - 'postgres_data:/var/lib/postgresql/data'
+volumes:
+  postgres_data:
+
+
