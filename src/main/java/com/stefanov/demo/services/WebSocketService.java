@@ -1,7 +1,10 @@
 package com.stefanov.demo.services;
 
+import com.stefanov.demo.config.BnbUrlProps;
+import com.stefanov.demo.config.WebSocketProps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -17,12 +20,12 @@ public class WebSocketService extends TextWebSocketHandler {
 
     private WebSocketSession session;
 
-    private final Props props;
+    private final WebSocketProps webSocketProps;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         log.info("WS session to client started.");
-        session.setTextMessageSizeLimit(props.getWsTextMessageSizeLimit());
+        session.setTextMessageSizeLimit(webSocketProps.getTextMessageSizeLimit());
         this.session = session;
     }
 

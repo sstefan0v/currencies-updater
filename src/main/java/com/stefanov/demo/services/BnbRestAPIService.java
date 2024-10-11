@@ -1,5 +1,6 @@
 package com.stefanov.demo.services;
 
+import com.stefanov.demo.config.BnbUrlProps;
 import com.stefanov.demo.controllers.model.RowsList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class BnbRestAPIService extends BnbRestAPIConnector {
     private final JaxBParser jaxBParser;
 
     @Autowired
-    public BnbRestAPIService(Props props, WebClient.Builder webBuilder, JaxBParser jaxBParser) {
-        super(props, webBuilder);
+    public BnbRestAPIService(BnbUrlProps bnbUrlProps, WebClient.Builder webBuilder, JaxBParser jaxBParser) {
+        super(bnbUrlProps, webBuilder);
         this.jaxBParser = jaxBParser;
     }
 
