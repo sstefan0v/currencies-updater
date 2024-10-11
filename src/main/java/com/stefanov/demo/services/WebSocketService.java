@@ -1,7 +1,7 @@
 package com.stefanov.demo.services;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -12,12 +12,12 @@ import java.io.IOException;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class WebSocketService extends TextWebSocketHandler {
 
     private WebSocketSession session;
 
-    @Autowired
-    private Props props;
+    private final Props props;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {

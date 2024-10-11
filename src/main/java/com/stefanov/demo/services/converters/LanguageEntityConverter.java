@@ -2,7 +2,7 @@ package com.stefanov.demo.services.converters;
 
 import com.stefanov.demo.controllers.model.Row;
 import com.stefanov.demo.entities.Language;
-import com.stefanov.demo.services.LanguageCode;
+import com.stefanov.demo.services.enums.LanguageCode;
 import org.springframework.stereotype.Service;
 
 @Service

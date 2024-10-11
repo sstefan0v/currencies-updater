@@ -8,6 +8,7 @@ import org.hibernate.annotations.Cascade;
 
 import static org.hibernate.annotations.CascadeType.ALL;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -53,6 +54,9 @@ public class Language {
 
     @Column(name = "f_star")
     private Integer fStar;
+
+    @Column(name = "date")
+    private LocalDate date;
 
     @ManyToMany
     @JoinTable(

@@ -23,7 +23,8 @@ CREATE TABLE languages
     extra_info   TEXT,
     curr_date    VARCHAR(10),
     title        TEXT,
-    f_star       INTEGER
+    f_star       INTEGER,
+    date         DATE
 );
 
 CREATE TABLE languages_currencies

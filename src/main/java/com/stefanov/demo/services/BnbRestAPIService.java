@@ -6,18 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static com.stefanov.demo.services.LanguageCode.BULGARIAN;
-import static com.stefanov.demo.services.LanguageCode.ENGLISH;
+import static com.stefanov.demo.services.enums.LanguageCode.BULGARIAN;
+import static com.stefanov.demo.services.enums.LanguageCode.ENGLISH;
 
 @Service
 @Slf4j
 public class BnbRestAPIService extends BnbRestAPIConnector {
 
-    @Autowired
-    private JaxBParser jaxBParser;
+    private final JaxBParser jaxBParser;
 
-    public BnbRestAPIService(Props props, WebClient.Builder webBuilder) {
+    @Autowired
+    public BnbRestAPIService(Props props, WebClient.Builder webBuilder, JaxBParser jaxBParser) {
         super(props, webBuilder);
+        this.jaxBParser = jaxBParser;
     }
 
     public RowsList getDataInBulgarian()  {

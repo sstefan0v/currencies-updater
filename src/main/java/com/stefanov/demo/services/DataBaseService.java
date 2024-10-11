@@ -6,30 +6,26 @@ import com.stefanov.demo.entities.Language;
 import com.stefanov.demo.repositories.LanguageRepository;
 import com.stefanov.demo.services.converters.CurrenciesEntityConverter;
 import com.stefanov.demo.services.converters.LanguageEntityConverter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.stefanov.demo.services.LanguageCode.BULGARIAN;
-import static com.stefanov.demo.services.LanguageCode.ENGLISH;
+import static com.stefanov.demo.services.enums.LanguageCode.BULGARIAN;
+import static com.stefanov.demo.services.enums.LanguageCode.ENGLISH;
 
 @Slf4j
-@Repository
+@Service
+@RequiredArgsConstructor
 public class DataBaseService {
 
-    @Autowired
-    private LanguageRepository languageRepository;
-
-    @Autowired
-    private CurrenciesEntityConverter currenciesEntityConverter;
-
-    @Autowired
-    private LanguageEntityConverter languageEntityConverter;
+    private final LanguageRepository languageRepository;
+    private final CurrenciesEntityConverter currenciesEntityConverter;
+    private final LanguageEntityConverter languageEntityConverter;
 
     List<Language> getRecentRecordsFromDB(LocalDate lastDateFromBnb) {
         Currency currency = new Currency();
@@ -37,6 +33,7 @@ public class DataBaseService {
 
         Language language = new Language();
         language.setCurrencies(List.of(currency));
+        language.setDate(lastDateFromBnb);
         List<Language> languages = languageRepository.findAll(Example.of(language));
 
         log.info("Found {} currency lists (by language) in DB.", languages.size());

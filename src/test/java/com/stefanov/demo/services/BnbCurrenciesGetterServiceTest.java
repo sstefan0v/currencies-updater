@@ -1,5 +1,6 @@
 package com.stefanov.demo.services;
 
+import com.stefanov.demo.controllers.model.RowsList;
 import com.stefanov.demo.entities.Currency;
 import com.stefanov.demo.entities.Language;
 import com.stefanov.demo.services.converters.JsonMapperService;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import static org.mockito.Mockito.*;
 public class BnbCurrenciesGetterServiceTest {
 
     @Mock
+
     private BnbRestAPIService bnbRestAPI;
 
     @Mock
@@ -33,20 +36,16 @@ public class BnbCurrenciesGetterServiceTest {
     @Mock
     private WebSocketService wsService;
 
-    @InjectMocks
     private BnbCurrenciesGetterService bnbCurrenciesGetterService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        bnbCurrenciesGetterService = new BnbCurrenciesGetterService(bnbRestAPI, wsService, jsonMapperService, dbService);
     }
 
     @Test
     void willPersistCurrenciesIfDbRecordsAreOlderThanBNBData() {
-        List<Language> mockLanguages = List.of(new Language());
-
-        when(dbService.getRecentRecordsFromDB(any(LocalDate.class))).thenReturn(mockLanguages);
-        when(jsonMapperService.toJsonString(mockLanguages)).thenReturn("{}");
         when(dbService.createBulgLanguageEntity(any())).thenReturn(getTestLanguage());
         when(dbService.createEngLanguageEntity(any(), anyList())).thenReturn(getTestLanguage());
         when(dbService.getMostRecentCurrencyDateFromDB()).thenReturn(LocalDate.of(1,1,1));

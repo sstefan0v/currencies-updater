@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Wrapper {
+public class JsonWrapper {
     private List<Currency> currencies;
     private List<Language> languages;
 }

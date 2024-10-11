@@ -1,4 +1,4 @@
-package com.stefanov.demo.services;
+package com.stefanov.demo.services.enums;
 
 import lombok.Getter;
 
